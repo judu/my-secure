@@ -99,14 +99,6 @@ public class SecurityProvider extends Controller {
         }
     }
 
-    private static void redirectToOriginalUrl() {
-        String url = flash.get("url");
-        if (url == null) {
-            url = "/";
-        }
-        redirect(url);
-    }
-
 
     public static void doLogout() {
         Class cl = getProvider(session.get(PROVIDER_KEY));
