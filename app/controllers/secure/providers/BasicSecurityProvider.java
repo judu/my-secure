@@ -83,6 +83,9 @@ public class BasicSecurityProvider extends SecurityProvider {
         if (remember) {
             response.setCookie("rememberme", Crypto.sign(username) + "-" + username, "30d");
         }
+
+        SecurityExtensionPoint.invokeFor(BasicSecurityProvider.class, "onAuthenticated");
+
         // Redirect to the original URL (or /)
         redirectToOriginalURL();
     }

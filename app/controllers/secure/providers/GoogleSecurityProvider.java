@@ -6,6 +6,7 @@ package controllers.secure.providers;
 
 import annotations.Provides;
 import controllers.secure.SecurityProvider;
+import extension.secure.SecurityExtensionPoint;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -102,6 +103,9 @@ public class GoogleSecurityProvider extends SecurityProvider {
             session.put("lastName", auth.getLastname());
             session.put("language", auth.getLanguage());
             session.put("email", auth.getEmail());
+
+            SecurityExtensionPoint.invokeFor(GoogleSecurityProvider.class, "onAuthenticated");
+
             redirectToOriginalURL();
         } catch (Throwable ex) {
             Logger.error(ex.getMessage());
@@ -140,7 +144,6 @@ public class GoogleSecurityProvider extends SecurityProvider {
                }
            });
     }
-
 
     /**
      * Get informations about authenticated user.

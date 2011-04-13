@@ -19,5 +19,7 @@ public class BasicExtensionPoint extends SecurityExtensionPoint {
         return true;
     }
 
+    public static void onAuthenticated() {
+    }
 
 }

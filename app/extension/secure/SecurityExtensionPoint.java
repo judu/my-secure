@@ -28,9 +28,10 @@ public class SecurityExtensionPoint {
     }
 
     public static void onCheckFailed() {
-        return;
     }
 
+    public static void onAuthenticated() {
+    }
 
     public static List<Class<? extends SecurityExtensionPoint>> findFor(Class providerClass) {
         List<Class<? extends SecurityExtensionPoint>> classes = new LinkedList<Class<? extends SecurityExtensionPoint>>();
