@@ -1,0 +1,7 @@
+self: clevercloud -> secure 0.5
+
+require:
+   - org.expressme -> JOpenId 1.08
+
+
+

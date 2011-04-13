@@ -1,0 +1,19 @@
+# This file defines all module routes (Higher priority routes first)
+#
+# import these routes in the main app as :
+# *     /                       module:Secure
+#
+# ~~~~
+
+
+GET     /logout                 secure.SecurityProvider.logout
+
+# Auth-specific urls
+
+# Basic Auth
+GET     /basic/login            secure.providers.BasicSecurityProvider.login
+POST    /basic/login            secure.providers.BasicSecurityProvider.authenticate
+
+# Google Auth
+GET     /gapp/login             secure.providers.GoogleSecurityProvider.askGoogle
+GET     /gapp/authd             secure.providers.GoogleSecurityProvider.finishAuth
