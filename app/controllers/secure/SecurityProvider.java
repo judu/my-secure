@@ -30,7 +30,6 @@ public class SecurityProvider extends Controller {
         if (!SecurityProvider.class.isAssignableFrom(getControllerClass())) {
             play.Logger.info("re route");
             if (!session.contains("username")) {
-                flash.put("next", Crypto.encryptAES(request.action));
                 flash.put(PROVIDER_KEY, "basic");
                 BasicSecurityProvider.login();
             }
