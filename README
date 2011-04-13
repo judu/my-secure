@@ -1,0 +1,19 @@
+Authentication in Play! Framework:
+
+ — Basic username/password auth
+ — Google openId auth
+ — Allow you to add auth means and you both at the same time
+ 
+Usage:
+
+	For the Basic authentication:
+
+annotate the targeted controller with @With(BasicSecurityProvider.class). Extend BasicSecurityExtensionPoint, annotate with @For(BasicSecurityProvider.class), and override methods.
+
+	For the Google authentication:
+
+annotate the targeted controller with @With(GoogleSecurityProvider.class). Extend GoogleSecurityExtensionPoint, annotate you class with @For(GoogleSecurityProvider.class), and override methods.
+
+
+Still in development.
+
