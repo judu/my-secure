@@ -6,7 +6,7 @@
 # ~~~~
 
 
-GET     /logout                 secure.SecurityProvider.logout
+GET     /logout                 secure.SecurityProvider.doLogout
 
 # Auth-specific urls
 

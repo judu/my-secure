@@ -94,7 +94,7 @@ public class BasicSecurityProvider extends SecurityProvider {
     public static void logout() {
         session.clear();
         response.removeCookie("rememberme");
-        redirect("/");
+        redirect("/basic/login");
     }
 
     /**
