@@ -103,7 +103,7 @@ public class GoogleSecurityProvider extends SecurityProvider {
             session.put("lastName", auth.getLastname());
             session.put("language", auth.getLanguage());
             session.put("email", auth.getEmail());
-
+            session.put(PROVIDER_KEY, "google");
             SecurityExtensionPoint.invokeFor(GoogleSecurityProvider.class, "onAuthenticated");
 
             redirectToOriginalURL();

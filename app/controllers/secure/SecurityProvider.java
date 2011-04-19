@@ -116,6 +116,7 @@ public class SecurityProvider extends Controller {
 
     public static AuthUser getAuthUser() {
         try {
+            play.Logger.info(session.get(PROVIDER_KEY));
             return (AuthUser) Java.invokeStaticOrParent(getProvider(session.get(PROVIDER_KEY)), "doGetAuthUser");
         } catch (Exception ex) {
             Logger.getLogger(SecurityProvider.class.getName()).log(Level.SEVERE, null, ex);
