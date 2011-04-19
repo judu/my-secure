@@ -109,6 +109,7 @@ public class SecurityProvider extends Controller {
     }
 
     public static void logout() {
+        session.remove("username");
         session.clear();
         redirect("/");
     }
