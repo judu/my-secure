@@ -59,6 +59,8 @@ public class GoogleSecurityProvider extends SecurityProvider {
 
         String domain = Play.configuration.getProperty("auth.googledomain", request.domain);
 
+        Logger.info("Authenticating for domain %s", domain);
+
         OpenIdManager manager = new OpenIdManager();
 
         Long id = GoogleAuthProcess.nextID();
@@ -97,10 +99,11 @@ public class GoogleSecurityProvider extends SecurityProvider {
             OpenIdManager manager = process.manager;
             Authentication auth = manager.getAuthentication(createRequest(request.url), process.association.getRawMacKey(), "ext1");
 
-            session.put("username", auth.getIdentity());
-            session.put("fullName", auth.getFullname());
-            session.put("firstName", auth.getFirstname());
-            session.put("lastName", auth.getLastname());
+            session.put("username", auth.getFirstname() + " " + auth.getLastname().toUpperCase());
+            session.put("identity", auth.getIdentity());
+            session.put("fullname", auth.getFullname());
+            session.put("firstname", auth.getFirstname());
+            session.put("lastname", auth.getLastname());
             session.put("language", auth.getLanguage());
             session.put("email", auth.getEmail());
             session.put(PROVIDER_KEY, "google");
@@ -155,10 +158,12 @@ public class GoogleSecurityProvider extends SecurityProvider {
 
         AuthUserImpl au = new AuthUserImpl(cl, session.get("username"));
 
-        au.addField("fullName", session.get("fullName"));
-        au.addField("firstName", session.get("firstName"));
-        au.addField("language", session.get("language"));
-        au.addField("email", session.get("email"));
+        au.addField("identity",     session.get("identity"));
+        au.addField("fullname",     session.get("fullname"));
+        au.addField("firstname",    session.get("firstname"));
+        au.addField("lastname",     session.get("lastname"));
+        au.addField("language",     session.get("language"));
+        au.addField("email",        session.get("email"));
 
 
         return au;
