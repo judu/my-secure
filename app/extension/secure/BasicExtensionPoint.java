@@ -16,7 +16,7 @@ import controllers.secure.providers.BasicSecurityProvider;
 public class BasicExtensionPoint extends SecurityExtensionPoint {
 
     public static boolean authenticate(String username, String password) {
-        return true;
+        return false;
     }
 
     public static void onAuthenticated() {

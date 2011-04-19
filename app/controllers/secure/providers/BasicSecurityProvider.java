@@ -58,9 +58,11 @@ public class BasicSecurityProvider extends SecurityProvider {
         // Check tokens
         Boolean allowed = false;
 
+
+
         for(Class cl : SecurityExtensionPoint.findFor(BasicSecurityProvider.class)) {
             try {
-                play.Logger.debug("Try with %s", cl.getCanonicalName());
+                play.Logger.info("Try with %s", cl.getCanonicalName());
                 allowed = allowed || (Boolean) Java.invokeStaticOrParent(cl, "authenticate", username, password);
             } catch (Exception ex) {
                 Logger.getLogger(BasicSecurityProvider.class.getName()).log(Level.SEVERE, null, ex);
