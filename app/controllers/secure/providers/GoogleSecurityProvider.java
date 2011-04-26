@@ -39,11 +39,11 @@ public class GoogleSecurityProvider extends SecurityProvider {
 
     @Before(priority = 50, unless = {"askGoogle", "finishAuth", "logout"})
     static void checkAccess() {
-        play.Logger.debug("checkAccess Basic for %s", getControllerClass().getCanonicalName());
+        play.Logger.debug("checkAccess Google for %s", getControllerClass().getCanonicalName());
 
         flash.put(PROVIDER_KEY, "google");
 
-        if (!BasicSecurityProvider.class.isAssignableFrom(getControllerClass())) {
+        if (!GoogleSecurityProvider.class.isAssignableFrom(getControllerClass())) {
             play.Logger.debug("Not assignable from");
             if (!session.contains("username")) {
                 play.Logger.debug("No username");
