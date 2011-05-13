@@ -15,5 +15,5 @@ GET     /basic/login            secure.providers.BasicSecurityProvider.login
 POST    /basic/login            secure.providers.BasicSecurityProvider.authenticate
 
 # Google Auth
-GET     /gapp/login             secure.providers.GoogleSecurityProvider.askGoogle
+GET     /gapp/login             secure.providers.GoogleSecurityProvider.login
 GET     /gapp/authd             secure.providers.GoogleSecurityProvider.finishAuth

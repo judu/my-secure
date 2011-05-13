@@ -4,7 +4,7 @@ import annotations.Provides;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import play.mvc.Before;
-import controllers.secure.SecurityProvider;
+import controllers.secure.Secure;
 import extension.secure.SecurityExtensionPoint;
 import models.secure.AuthUser;
 import models.secure.AuthUserImpl;
@@ -19,7 +19,7 @@ import play.utils.Java;
  * @author Julien Durillon
  */
 @Provides("basic")
-public class BasicSecurityProvider extends SecurityProvider {
+public class BasicSecurityProvider extends Secure {
 
     @Before(priority = 50, unless={"login", "authenticate", "logout"})
     static void checkAccess() {
@@ -40,6 +40,8 @@ public class BasicSecurityProvider extends SecurityProvider {
     }
 
     public static void login() {
+       flash.put(PROVIDER_KEY, "basic");
+       
         Http.Cookie remember = request.cookies.get("rememberme");
         if (remember != null && remember.value.indexOf("-") > 0) {
             String sign = remember.value.substring(0, remember.value.indexOf("-"));
@@ -57,8 +59,6 @@ public class BasicSecurityProvider extends SecurityProvider {
     public static void authenticate(@Required String username, String password, boolean remember) {
         // Check tokens
         Boolean allowed = false;
-
-
 
         for(Class cl : SecurityExtensionPoint.findFor(BasicSecurityProvider.class)) {
             try {
@@ -105,7 +105,7 @@ public class BasicSecurityProvider extends SecurityProvider {
      * @return
      */
     public static AuthUser doGetAuthUser() {
-        Class cl = getProvider(session.get(SecurityProvider.PROVIDER_KEY));
+        Class cl = getProvider(session.get(Secure.PROVIDER_KEY));
         session.get("username");
 
         AuthUser au = new AuthUserImpl(cl, session.get("username"));

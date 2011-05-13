@@ -1,7 +1,7 @@
 package extension.secure;
 
 import annotations.For;
-import controllers.secure.SecurityProvider;
+import controllers.secure.Secure;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class SecurityExtensionPoint {
     }
 
 
-    public static List<Object> invokeFor(Class<? extends SecurityProvider> provider, String method, Object ... args) {
+    public static List<Object> invokeFor(Class<? extends Secure> provider, String method, Object ... args) {
         List<Class<? extends SecurityExtensionPoint>> eps = findFor(provider);
 
         List<Object> retour = new ArrayList<Object>(eps.size());

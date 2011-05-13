@@ -1,0 +1,7 @@
+<h2>Veuillez choisir la méthode d'authentification </h2>
+
+<ul>
+#{list items:toDisplay.keySet(), as:'url'}
+<li><a href="${url}">${toDisplay.get(url)}</a></li>
+#{/list}
+</ul>
