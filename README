@@ -2,13 +2,14 @@ Authentication in Play! Framework:
 
  — Basic username/password auth
  — Google openId auth
- — Allow you to add auth means and use many of them at the same time
+ — Allows you to add auth providers and use many of them at the same time
+ – Gives to the user the choice between several authentication types
  
 Usage:
 
    Annotate the class that has to be « secured » with @With(Secure.class)
 
-   Create the file conf/security.conf.
+   Create the conf/security.conf file.
 
 Security.conf syntax:
 
@@ -18,16 +19,28 @@ Security.conf syntax:
 
    Define named authentication list:
       
-      @name       provider1[(param1:value1,…)][,provider2[,@othernamedlist,…]]
+      @name       provider1[(param1:value1,…)][,provider2][,@othernamedlist,…]
 
    Associate authentication providers to an action or controller:
 
       controller[.action]     @aname[,aprovider[(opt1:value1)],…]
 
-So, may way to do it : define a named list of providers, use it with one or many controller chains, 
+So, many way to do it : define a named list of providers, use it with one or many controller chains, 
 use a named list to define another one, many named list for a controller chain
 
 
+Example:
+
++-----------------------------------------------------------------------+
+|   @first               google(domain:first-domain.com),basic          |
+|   @second              google(domain:anotherdomain.org)               |
+|   import:somemodule                                                   |
+|   Application.index    @first,google(domain:second-domain.fr),@second |
+|   OtherController      basic,@second                                  |
++-----------------------------------------------------------------------+
 
 
+What is missing?
 
+   — comments in the conf file.
+   — ?
