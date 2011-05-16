@@ -2,18 +2,32 @@ Authentication in Play! Framework:
 
  — Basic username/password auth
  — Google openId auth
- — Allow you to add auth means and you both at the same time
+ — Allow you to add auth means and use many of them at the same time
  
 Usage:
 
-	For the Basic authentication:
+   Annotate the class that has to be « secured » with @With(Secure.class)
 
-annotate the targeted controller with @With(BasicSecurityProvider.class). Extend BasicSecurityExtensionPoint, annotate with @For(BasicSecurityProvider.class), and override methods.
+   Create the file conf/security.conf.
 
-	For the Google authentication:
+Security.conf syntax:
 
-annotate the targeted controller with @With(GoogleSecurityProvider.class). Extend GoogleSecurityExtensionPoint, annotate you class with @For(GoogleSecurityProvider.class), and override methods.
+   Import configuration from another module :
+
+      import:modulename
+
+   Define named authentication list:
+      
+      @name       provider1[(param1:value1,…)][,provider2[,@othernamedlist,…]]
+
+   Associate authentication providers to an action or controller:
+
+      controller[.action]     @aname[,aprovider[(opt1:value1)],…]
+
+So, may way to do it : define a named list of providers, use it with one or many controller chains, 
+use a named list to define another one, many named list for a controller chain
 
 
-Still in development.
+
+
 
