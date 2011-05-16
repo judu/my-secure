@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package play.modules.secure;
 
 /**
@@ -12,6 +8,10 @@ class ParsingException extends Exception {
 
    public ParsingException(String string) {
       super(string);
+   }
+
+   public ParsingException(String string, Exception ex) {
+      super(string, ex);
    }
    
 }

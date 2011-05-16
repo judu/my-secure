@@ -10,8 +10,11 @@ import models.secure.AuthUser;
 import models.secure.AuthUserImpl;
 import play.data.validation.Required;
 import play.data.validation.Validation;
+import play.i18n.Messages;
 import play.libs.Crypto;
+import play.modules.secure.SecureConf.ProviderParams;
 import play.mvc.Http;
+import play.mvc.Router;
 import play.utils.Java;
 
 /**
@@ -110,5 +113,13 @@ public class BasicSecurityProvider extends Secure {
 
         AuthUser au = new AuthUserImpl(cl, session.get("username"));
         return au;
+    }
+    
+    public static String getLoginUrl(ProviderParams pp) {
+       return Router.getFullUrl("secure.providers.BasicSecurityProvider.login");
+    }
+    
+    public static String getDisplayMessage(ProviderParams pp) {
+       return Messages.get("basic.display");
     }
 }

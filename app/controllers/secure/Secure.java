@@ -17,7 +17,6 @@ import play.modules.secure.SecureConf.ProviderParams;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Router;
-import play.mvc.Router.Route;
 import play.utils.Java;
 
 /**
@@ -28,14 +27,13 @@ public class Secure extends Controller {
 
    public static String PROVIDER_KEY = "authprovider";
 
-   @Before(priority = 100)
+   @Before(priority = 100, unless = {"logout", "doLogout"})
    static void checkAccess() {
-
-      play.Logger.info("Action : %s", request.action);
-      play.Logger.info("checkAccess Main controller class %s", getControllerClass().getCanonicalName());
+      play.Logger.info("[in @Before] Action : %s", request.action);
+      play.Logger.info("[in @Before] checkAccess Main controller class %s", getControllerClass().getCanonicalName());
       if (!Secure.class.isAssignableFrom(getControllerClass())) {
          if (!session.contains("username")) {
-            flash.put("url", request.method.equals("POST") ? "/":request.url);
+            flash.put("url", request.method.equals("POST") ? "/" : request.url);
             flash.put("originalUrl", request.url);
             flash.put("originalVerb", request.method);
             displayChoice();
@@ -105,7 +103,12 @@ public class Secure extends Controller {
       try {
          Java.invokeStaticOrParent(cl, "logout");
       } catch (Exception ex) {
-         Logger.error(ex, "");
+         Throwable cause = ex.getCause();
+         if(cause != null && cause instanceof RuntimeException) {
+            throw (RuntimeException) cause;
+         } else {
+            Logger.error(ex, "");
+         }
       }
    }
 
@@ -145,26 +148,25 @@ public class Secure extends Controller {
 
       String originalUrl = flash.get("originalUrl");
       String originalVerb = flash.get("originalVerb");
-      Map<String, String> route = Router.route(originalVerb, originalUrl.substring(0, originalUrl.indexOf("?")));
+      int startOfQuery = originalUrl.indexOf("?");
 
+      Map<String, String> route = Router.route(originalVerb, startOfQuery > 0 ? originalUrl.substring(0, startOfQuery) : originalUrl);
       if (route.containsKey("action")) {
          String action = route.get("action");
-
          List<ProviderParams> handlers = SecureConf.getHandlers(action);
          if (handlers != null) {
             Map<String, String> toDisplay = new HashMap<String, String>();
-
             for (ProviderParams pp : handlers) {
                try {
                   Class provider = getProvider(pp.name());
-                  String url = Router.getFullUrl(provider.getName() + ".login");
+                  String url = (String) Java.invokeStatic(provider, "getLoginUrl", pp);
                   String display = (String) Java.invokeStatic(provider, "getDisplayMessage", pp);
                   toDisplay.put(url, display);
                } catch (Exception ex) {
                   Logger.error("provider " + pp.name() + " does not have getDisplayMessage method");
                }
             }
-            
+
             flash.keep();
             render(toDisplay);
          } else {

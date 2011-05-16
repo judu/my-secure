@@ -29,6 +29,9 @@ public class SecureConf extends PlayPlugin {
       if (handling == null) {
          handling = new HashMap<String, String>();
       }
+      if (providers == null) {
+         providers = new HashMap<String, List<ProviderParams>>();
+      }
       VirtualFile vf = Play.getVirtualFile(SECURITY_CONF_FILE);
       parseFile(vf);
    }
@@ -41,6 +44,7 @@ public class SecureConf extends PlayPlugin {
             int lineNumber = 0;
             while ((line = br.readLine()) != null) {
                ++lineNumber;
+               Logger.debug("parsing line %s", line);
                parseLine(line, lineNumber);
             }
          }
@@ -58,7 +62,7 @@ public class SecureConf extends PlayPlugin {
             handler = handling.get(actionChain.substring(0, actionChain.indexOf(".")));
          }
       }
-      if(handler != null) {
+      if (handler != null) {
          return providers.get(handler);
       } else {
          return null;
@@ -85,13 +89,19 @@ public class SecureConf extends PlayPlugin {
     * @throws ParsingException If it can't parse the line.
     */
    private void parseLine(String line, int lineNumber) throws ParsingException {
-      String toTreat = line.trim();
-      if (line.startsWith("@")) {
-         parseIdentifierDeclaration(toTreat);
-      } else if (line.startsWith("import:")) {
-         parseImport(toTreat);
-      } else {
-         parseNormalLine(toTreat);
+      try {
+         String toTreat = line.trim();
+         if (!line.isEmpty()) {
+            if (line.startsWith("@")) {
+               parseIdentifierDeclaration(toTreat);
+            } else if (line.startsWith("import:")) {
+               parseImport(toTreat);
+            } else {
+               parseNormalLine(toTreat);
+            }
+         }
+      } catch (ParsingException ex) {
+         throw new ParsingException("Parsing error in line " + lineNumber, ex);
       }
    }
 
@@ -102,19 +112,28 @@ public class SecureConf extends PlayPlugin {
     * @param toTreat 
     */
    private void parseIdentifierDeclaration(String toTreat) throws ParsingException {
-      int spaceindex = toTreat.indexOf(" ");
-      String id = toTreat.substring(0, spaceindex);
-      String provDefs = toTreat.substring(spaceindex + 1).trim();
-      providers.put(id, parseProviderDefinitionList(provDefs));
+      String[] splitted = toTreat.split("\\s", 2);
+      if(splitted.length != 2) {
+         throw new ParsingException("La ligne de définition d'un @iden doit être de la forme : @iden   conf(param:arg),@otherid");
+      }
+      providers.put(splitted[0].trim(), parseProviderDefinitionList(splitted[1].trim()));
    }
 
    private List<ProviderParams> parseProviderDefinitionList(String provDefs) throws ParsingException {
       List<ProviderParams> pps = new LinkedList<ProviderParams>();
-      while (provDefs.length() > 0) {
+      while (!provDefs.isEmpty()) {
+         if(provDefs.startsWith(",")) {
+          provDefs = provDefs.substring(1);  
+         }
          String bout = getPartOfConf(provDefs);
-         provDefs = provDefs.substring(bout.length() + 1);
+         
+         int len = bout.length();
+         Logger.debug("bout : %s «%s»", len, bout);
+         Logger.debug("provdefs : %s «%s»", provDefs.length(), provDefs);
+         provDefs = provDefs.substring(len);
          pps.addAll(parsePartOfConf(bout));
       }
+      Logger.debug("providers : %s", pps);
       return pps;
    }
 
@@ -124,9 +143,15 @@ public class SecureConf extends PlayPlugin {
    }
 
    private void parseNormalLine(String toTreat) throws ParsingException {
-      int spaceindex = toTreat.indexOf(" ");
-      String actionChain = toTreat.substring(0, spaceindex);
-      String provs = toTreat.substring(spaceindex + 1).trim();
+      String[] splitted = toTreat.split("\\s", 2); // split the actionChain and the providers definitions
+
+      if(splitted.length != 2) {
+         throw new ParsingException("The format should be controller[.action]    listOf@idsOrProviders");
+      }
+      
+      String actionChain = splitted[0].trim();
+      String provs = splitted[1].trim();
+      Logger.debug("actionchain : %s", actionChain);
 
       if (!provs.contains(",")
               && provs.startsWith("@")) {
@@ -137,6 +162,8 @@ public class SecureConf extends PlayPlugin {
          providers.put(actionChain, parseProviderDefinitionList(provs));
          handling.put(actionChain, actionChain);
       }
+      
+      Logger.debug("Line parsed : %s -> %s", actionChain, providers.get(handling.get(actionChain)));
    }
 
    private String getPartOfConf(String provDefs) {
@@ -144,19 +171,22 @@ public class SecureConf extends PlayPlugin {
       if (provDefs.startsWith("@")) {
          return provDefs.substring(0, vindex > 0 ? vindex : provDefs.length()).trim();
       } else {
-         int pindex = provDefs.indexOf("(");
-         if (pindex >= 0 && pindex < provDefs.indexOf(",")) {
-            //On prend le nom + les parenthèses
-            return provDefs.substring(0, provDefs.indexOf(")") + 1);
+         if (vindex > 0) { // Si on a une virgule
+            int pindex = provDefs.indexOf("(");
+            if (pindex >= 0 && pindex < vindex) { // Si on a une parenthèse avant la virgule
+               //On prend le nom + les parenthèses
+               return provDefs.substring(0, provDefs.indexOf(")") + 1);
+            } else {
+               //On ne prend que le nom
+               return provDefs.substring(0, vindex);
+            }
          } else {
-            //On ne prend que le nom
-            return provDefs.substring(0, vindex);
+            return provDefs; // Si pas de virgule, on renvoie tout
          }
       }
    }
 
    private Collection<ProviderParams> parsePartOfConf(String bout) throws ParsingException {
-      List<ProviderParams> list = new LinkedList<ProviderParams>();
       if (bout.startsWith("@")) {
          return providers.get(bout);
       } else {
@@ -258,6 +288,11 @@ public class SecureConf extends PlayPlugin {
 
       public String get(String key) {
          return this.conf.get(key);
+      }
+
+      @Override
+      public String toString() {
+         return "ProviderParams{" + "name=" + name + ", conf=" + conf + '}';
       }
    }
 }

@@ -24,6 +24,8 @@ import org.expressme.openid.OpenIdManager;
 import play.Logger;
 import play.Play;
 import play.cache.Cache;
+import play.i18n.Messages;
+import play.modules.secure.SecureConf.ProviderParams;
 import play.mvc.Before;
 import play.mvc.Router;
 import utils.secure.GoogleAuthProcess;
@@ -37,30 +39,29 @@ public class GoogleSecurityProvider extends Secure {
 
    public static final String GOOGLEURL = "https://www.google.com/accounts/o8/site-xrds?hd=";
 
-   @Before(priority = 50, unless = {"login", "finishAuth", "logout"})
-   static void checkAccess() {
-      play.Logger.debug("checkAccess Basic for %s", getControllerClass().getCanonicalName());
-
-      flash.put(PROVIDER_KEY, "google");
-
-      if (!BasicSecurityProvider.class.isAssignableFrom(getControllerClass())) {
-         play.Logger.debug("Not assignable from");
-         if (!session.contains("username")) {
-            play.Logger.debug("No username");
-            flash.put("url", "POST".equals(request.method) ? "/" : request.url);
-            login();
-         }
-         doCheck();
-      }
-   }
-
+//   @Before(priority = 50, unless = {"login", "finishAuth", "logout"})
+//   static void checkAccess() {
+//      play.Logger.debug("checkAccess Basic for %s", getControllerClass().getCanonicalName());
+//
+//      flash.put(PROVIDER_KEY, "google");
+//
+//      if (!BasicSecurityProvider.class.isAssignableFrom(getControllerClass())) {
+//         play.Logger.debug("Not assignable from");
+//         if (!session.contains("username")) {
+//            play.Logger.debug("No username");
+//            flash.put("url", "POST".equals(request.method) ? "/" : request.url);
+//            login();
+//         }
+//         doCheck();
+//      }
+//   }
    /**
     * Entry point for the provider
     */
-   public static void login() {
+   public static void login(String domain) {
       flash.put(PROVIDER_KEY, "google");
 
-      String domain = Play.configuration.getProperty("auth.googledomain", request.domain);
+      //String domain = Play.configuration.getProperty("auth.googledomain", request.domain);
 
       Logger.info("Authenticating for domain %s", domain);
 
@@ -156,9 +157,7 @@ public class GoogleSecurityProvider extends Secure {
     */
    public static AuthUser doGetAuthUser() {
       Class cl = getProvider(session.get(Secure.PROVIDER_KEY));
-
       AuthUserImpl au = new AuthUserImpl(cl, session.get("username"));
-
       au.addField("identity", session.get("identity"));
       au.addField("fullname", session.get("fullname"));
       au.addField("firstname", session.get("firstname"));
@@ -166,7 +165,18 @@ public class GoogleSecurityProvider extends Secure {
       au.addField("language", session.get("language"));
       au.addField("email", session.get("email"));
 
-
       return au;
+   }
+
+   public static String getLoginUrl(ProviderParams pp) {
+      Map<String, Object> map = new HashMap<String, Object>();
+      map.put("domain", pp.get("domain") != null ? pp.get("domain") : Play.configuration.getProperty("auth.googledomain", request.domain));
+      return Router.getFullUrl("secure.providers.GoogleSecurityProvider.login", map);
+   }
+
+   public static String getDisplayMessage(ProviderParams pp) {
+      return Messages.get("google.display", pp.get("domain") != null
+              ? pp.get("domain")
+              : Play.configuration.getProperty("auth.googledomain", request.domain));
    }
 }

@@ -2,4 +2,8 @@
 # You can specialize this file for each language.
 # For exemple, for french create a messages.fr file
 
-#Secure.name=Secure
+Secure.name=Secure
+
+google.display=Se connecter via google @%s.
+
+basic.display=Se connecter via user/password.
