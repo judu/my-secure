@@ -2,7 +2,6 @@ package controllers.secure;
 
 import annotations.Check;
 import annotations.Provides;
-import com.google.gson.Gson;
 import controllers.secure.providers.BasicSecurityProvider;
 import extension.secure.SecurityExtensionPoint;
 import java.util.HashMap;
