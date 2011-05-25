@@ -26,7 +26,6 @@ import play.Play;
 import play.cache.Cache;
 import play.i18n.Messages;
 import play.modules.secure.SecureConf.ProviderParams;
-import play.mvc.Before;
 import play.mvc.Router;
 import utils.secure.GoogleAuthProcess;
 
@@ -39,22 +38,6 @@ public class GoogleSecurityProvider extends Secure {
 
    public static final String GOOGLEURL = "https://www.google.com/accounts/o8/site-xrds?hd=";
 
-//   @Before(priority = 50, unless = {"login", "finishAuth", "logout"})
-//   static void checkAccess() {
-//      play.Logger.debug("checkAccess Basic for %s", getControllerClass().getCanonicalName());
-//
-//      flash.put(PROVIDER_KEY, "google");
-//
-//      if (!BasicSecurityProvider.class.isAssignableFrom(getControllerClass())) {
-//         play.Logger.debug("Not assignable from");
-//         if (!session.contains("username")) {
-//            play.Logger.debug("No username");
-//            flash.put("url", "POST".equals(request.method) ? "/" : request.url);
-//            login();
-//         }
-//         doCheck();
-//      }
-//   }
    /**
     * Entry point for the provider
     */

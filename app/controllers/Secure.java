@@ -28,8 +28,8 @@ public class Secure extends Controller {
 
    @Before(priority = 100, unless = {"logout", "doLogout"})
    static void checkAccess() {
-      play.Logger.info("[in @Before] Action : %s", request.action);
-      play.Logger.info("[in @Before] checkAccess Main controller class %s", getControllerClass().getCanonicalName());
+      play.Logger.debug("[in @Before] Action : %s", request.action);
+      play.Logger.debug("[in @Before] checkAccess Main controller class %s", getControllerClass().getCanonicalName());
       if (!Secure.class.isAssignableFrom(getControllerClass())) {
          if (!session.contains("username")) {
             flash.put("url", request.method.equals("POST") ? "/" : request.url);
@@ -103,7 +103,7 @@ public class Secure extends Controller {
          Java.invokeStaticOrParent(cl, "logout");
       } catch (Exception ex) {
          Throwable cause = ex.getCause();
-         if(cause != null && cause instanceof RuntimeException) {
+         if (cause != null && cause instanceof RuntimeException) {
             throw (RuntimeException) cause;
          } else {
             Logger.error(ex, "");
@@ -153,21 +153,34 @@ public class Secure extends Controller {
       if (route.containsKey("action")) {
          String action = route.get("action");
          List<ProviderParams> handlers = SecureConf.getHandlers(action);
-         if (handlers != null) {
-            Map<String, String> toDisplay = new HashMap<String, String>();
-            for (ProviderParams pp : handlers) {
+         if (handlers != null && !handlers.isEmpty()) {
+            if (handlers.size() > 1) {
+               Map<String, String> toDisplay = new HashMap<String, String>();
+               for (ProviderParams pp : handlers) {
+                  try {
+                     Class provider = getProvider(pp.name());
+                     String url = (String) Java.invokeStatic(provider, "getLoginUrl", pp);
+                     String display = (String) Java.invokeStatic(provider, "getDisplayMessage", pp);
+                     toDisplay.put(url, display);
+                  } catch (Exception ex) {
+                     Logger.error("provider " + pp.name() + " does not have getDisplayMessage method");
+                  }
+               }
+
+               flash.keep();
+               render(toDisplay);
+            } else {
+               ProviderParams pp = handlers.get(0);
                try {
                   Class provider = getProvider(pp.name());
                   String url = (String) Java.invokeStatic(provider, "getLoginUrl", pp);
-                  String display = (String) Java.invokeStatic(provider, "getDisplayMessage", pp);
-                  toDisplay.put(url, display);
+                  flash.keep();
+                  redirect(url);
                } catch (Exception ex) {
                   Logger.error("provider " + pp.name() + " does not have getDisplayMessage method");
                }
             }
 
-            flash.keep();
-            render(toDisplay);
          } else {
             BasicSecurityProvider.login();
          }

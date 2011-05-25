@@ -6,7 +6,8 @@
 # ~~~~
 
 
-GET     /logout                 secure.Secure.doLogout
+GET     /logout                 Secure.doLogout
+GET     /choice                 Secure.displayChoice
 
 # Auth-specific urls
 
