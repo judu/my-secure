@@ -1,6 +1,5 @@
 package controllers;
 
-import annotations.Check;
 import annotations.Provides;
 import controllers.secure.providers.BasicSecurityProvider;
 import extension.secure.SecurityExtensionPoint;
