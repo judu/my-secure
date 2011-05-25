@@ -39,6 +39,10 @@ public class Secure extends Controller {
          doCheck();
       }
    }
+   
+   public static boolean isConnected() {
+      return getAuthUser() != null;
+   }
 
    protected static void doCheck() {
 
