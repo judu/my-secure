@@ -4,7 +4,7 @@ import annotations.Provides;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import play.mvc.Before;
-import controllers.secure.Secure;
+import controllers.Secure;
 import extension.secure.SecurityExtensionPoint;
 import models.secure.AuthUser;
 import models.secure.AuthUserImpl;

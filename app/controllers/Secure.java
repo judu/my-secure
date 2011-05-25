@@ -1,4 +1,4 @@
-package controllers.secure;
+package controllers;
 
 import annotations.Check;
 import annotations.Provides;
@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import models.secure.AuthUser;
+import org.joda.time.DateTime;
 import play.Logger;
 import play.Play;
 import play.classloading.ApplicationClasses.ApplicationClass;

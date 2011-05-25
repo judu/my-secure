@@ -5,7 +5,7 @@
 package controllers.secure.providers;
 
 import annotations.Provides;
-import controllers.secure.Secure;
+import controllers.Secure;
 import extension.secure.SecurityExtensionPoint;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationHandler;
