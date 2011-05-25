@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import models.secure.AuthUser;
-import org.joda.time.DateTime;
 import play.Logger;
 import play.Play;
 import play.classloading.ApplicationClasses.ApplicationClass;
@@ -129,7 +128,6 @@ public class Secure extends Controller {
 
    public static Class<? extends Secure> getProvider(String provider) {
       if (provider != null) {
-
          for (ApplicationClass ac : Play.classes.getAssignableClasses(Secure.class)) {
             if (ac.javaClass.isAnnotationPresent(Provides.class)) {
                String value = ac.javaClass.getAnnotation(Provides.class).value();
