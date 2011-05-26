@@ -26,6 +26,7 @@ import play.Play;
 import play.cache.Cache;
 import play.i18n.Messages;
 import play.modules.secure.SecureConf.ProviderParams;
+import play.mvc.Before;
 import play.mvc.Router;
 import utils.secure.GoogleAuthProcess;
 
@@ -38,6 +39,22 @@ public class GoogleSecurityProvider extends Secure {
 
    public static final String GOOGLEURL = "https://www.google.com/accounts/o8/site-xrds?hd=";
 
+//   @Before(priority = 50, unless = {"login", "finishAuth", "logout"})
+//   static void checkAccess() {
+//      play.Logger.debug("checkAccess Basic for %s", getControllerClass().getCanonicalName());
+//
+//      flash.put(PROVIDER_KEY, "google");
+//
+//      if (!BasicSecurityProvider.class.isAssignableFrom(getControllerClass())) {
+//         play.Logger.debug("Not assignable from");
+//         if (!session.contains("username")) {
+//            play.Logger.debug("No username");
+//            flash.put("url", "POST".equals(request.method) ? "/" : request.url);
+//            login();
+//         }
+//         doCheck();
+//      }
+//   }
    /**
     * Entry point for the provider
     */
@@ -139,8 +156,8 @@ public class GoogleSecurityProvider extends Secure {
     * @return
     */
    public static AuthUser doGetAuthUser() {
-      Class cl = getProvider(session.get(Secure.PROVIDER_KEY));
-      if (session.get("username") != null) {
+      if (session.contains("username")) {
+         Class cl = getProvider(session.get(Secure.PROVIDER_KEY));
          AuthUserImpl au = new AuthUserImpl(cl, session.get("username"));
          au.addField("identity", session.get("identity"));
          au.addField("fullname", session.get("fullname"));
@@ -148,6 +165,7 @@ public class GoogleSecurityProvider extends Secure {
          au.addField("lastname", session.get("lastname"));
          au.addField("language", session.get("language"));
          au.addField("email", session.get("email"));
+
          return au;
       } else {
          return null;
