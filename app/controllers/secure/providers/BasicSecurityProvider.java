@@ -36,53 +36,7 @@ public class BasicSecurityProvider extends Secure {
             play.Logger.debug("No username");
             flash.put("url", "POST".equals(request.method) ? "/" : request.url);
             login();
-<<<<<<< HEAD
-        }
-        // Mark user as connected
-        session.put("username", username);
-        session.put(PROVIDER_KEY, "basic"); // Utile pour le logout
-        
-        // Remember if needed
-        if (remember) {
-            response.setCookie("rememberme", Crypto.sign(username) + "-" + username, "30d");
-        }
-
-        SecurityExtensionPoint.invokeFor(BasicSecurityProvider.class, "onAuthenticated");
-
-        // Redirect to the original URL (or /)
-        redirectToOriginalURL();
-    }
-
-
-    public static void logout() {
-        session.clear();
-        response.removeCookie("rememberme");
-        redirect("/basic/login");
-    }
-
-    /**
-     *
-     * @param session Should be the current session
-     * @return
-     */
-    public static AuthUser doGetAuthUser() {
-        Class cl = getProvider(session.get(Secure.PROVIDER_KEY));
-        session.get("username");
-
-        AuthUser au = new AuthUserImpl(cl, session.get("username"));
-        return au;
-    }
-    
-    public static String getLoginUrl(ProviderParams pp) {
-       return Router.getFullUrl("secure.providers.BasicSecurityProvider.login");
-    }
-    
-    public static String getDisplayMessage(ProviderParams pp) {
-       return Messages.get("basic.display");
-    }
-=======
          }
-
          doCheck();
       }
    }
@@ -168,5 +122,4 @@ public class BasicSecurityProvider extends Secure {
    public static String getDisplayMessage(ProviderParams pp) {
       return Messages.get("basic.display");
    }
->>>>>>> f696b20... better isConnected
 }

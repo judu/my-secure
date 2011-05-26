@@ -40,13 +40,10 @@ public class Secure extends Controller {
          doCheck();
       }
    }
-<<<<<<< HEAD
-=======
-   
+
    public static boolean isConnected() {
       return session.get("username") != null;
    }
->>>>>>> f696b20... better isConnected
 
    protected static void doCheck() {
 
@@ -110,7 +107,7 @@ public class Secure extends Controller {
          Java.invokeStaticOrParent(cl, "logout");
       } catch (Exception ex) {
          Throwable cause = ex.getCause();
-         if(cause != null && cause instanceof RuntimeException) {
+         if (cause != null && cause instanceof RuntimeException) {
             throw (RuntimeException) cause;
          } else {
             Logger.error(ex, "");

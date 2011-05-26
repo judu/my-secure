@@ -157,7 +157,7 @@ public class GoogleSecurityProvider extends Secure {
     */
    public static AuthUser doGetAuthUser() {
       Class cl = getProvider(session.get(Secure.PROVIDER_KEY));
-      if (session.get("username") != null) {
+      if (session.contains("username")) {
          AuthUserImpl au = new AuthUserImpl(cl, session.get("username"));
          au.addField("identity", session.get("identity"));
          au.addField("fullname", session.get("fullname"));
