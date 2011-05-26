@@ -41,7 +41,7 @@ public class Secure extends Controller {
    }
    
    public static boolean isConnected() {
-      return getAuthUser() != null;
+      return session.get("username") != null;
    }
 
    protected static void doCheck() {
