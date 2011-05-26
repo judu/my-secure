@@ -40,6 +40,13 @@ public class Secure extends Controller {
          doCheck();
       }
    }
+<<<<<<< HEAD
+=======
+   
+   public static boolean isConnected() {
+      return session.get("username") != null;
+   }
+>>>>>>> f696b20... better isConnected
 
    protected static void doCheck() {
 
