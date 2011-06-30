@@ -5,7 +5,7 @@
 package controllers.secure.providers;
 
 import annotations.Provides;
-import controllers.secure.Secure;
+import controllers.Secure;
 import extension.secure.SecurityExtensionPoint;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationHandler;
@@ -39,22 +39,6 @@ public class GoogleSecurityProvider extends Secure {
 
    public static final String GOOGLEURL = "https://www.google.com/accounts/o8/site-xrds?hd=";
 
-//   @Before(priority = 50, unless = {"login", "finishAuth", "logout"})
-//   static void checkAccess() {
-//      play.Logger.debug("checkAccess Basic for %s", getControllerClass().getCanonicalName());
-//
-//      flash.put(PROVIDER_KEY, "google");
-//
-//      if (!BasicSecurityProvider.class.isAssignableFrom(getControllerClass())) {
-//         play.Logger.debug("Not assignable from");
-//         if (!session.contains("username")) {
-//            play.Logger.debug("No username");
-//            flash.put("url", "POST".equals(request.method) ? "/" : request.url);
-//            login();
-//         }
-//         doCheck();
-//      }
-//   }
    /**
     * Entry point for the provider
     */
@@ -156,8 +140,8 @@ public class GoogleSecurityProvider extends Secure {
     * @return
     */
    public static AuthUser doGetAuthUser() {
-      Class cl = getProvider(session.get(Secure.PROVIDER_KEY));
       if (session.contains("username")) {
+         Class cl = getProvider(session.get(Secure.PROVIDER_KEY));
          AuthUserImpl au = new AuthUserImpl(cl, session.get("username"));
          au.addField("identity", session.get("identity"));
          au.addField("fullname", session.get("fullname"));

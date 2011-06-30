@@ -1,7 +1,7 @@
 package extension.secure;
 
 import annotations.For;
-import controllers.secure.Secure;
+import controllers.Secure;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
