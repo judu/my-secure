@@ -44,10 +44,6 @@ public class Secure extends Controller {
       return session.get("username") != null;
    }
 
-   public static boolean isConnected() {
-      return session.get("username") != null;
-   }
-
    protected static void doCheck() {
 
       play.Logger.debug("doCheck");
