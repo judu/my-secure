@@ -6,6 +6,7 @@ import extension.secure.SecurityExtensionPoint;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import models.secure.AuthUser;
 import play.Logger;
 import play.Play;
@@ -136,7 +137,7 @@ public class Secure extends Controller {
             if (ac.javaClass.isAnnotationPresent(Provides.class)) {
                String value = ac.javaClass.getAnnotation(Provides.class).value();
 
-               if (value != null && value.equals(provider)) {
+               if (provider.equals(value)) {
                   return (Class<? extends Secure>) ac.javaClass; // We return the first found because there should only be one.
                }
             }
@@ -160,9 +161,13 @@ public class Secure extends Controller {
                Map<String, String> toDisplay = new HashMap<String, String>();
                for (ProviderParams pp : handlers) {
                   try {
+                     play.Logger.info("Trying to get the provider");
                      Class provider = getProvider(pp.name());
+                     play.Logger.info("Before invokeStatic");
                      String url = (String) Java.invokeStatic(provider, "getLoginUrl", pp);
+                     play.Logger.info("Url: " + url);
                      String display = (String) Java.invokeStatic(provider, "getDisplayMessage", pp);
+                     play.Logger.info("Display: " + display);
                      toDisplay.put(url, display);
                   } catch (Exception ex) {
                      Logger.error("provider " + pp.name() + " does not have getDisplayMessage method");
@@ -174,7 +179,9 @@ public class Secure extends Controller {
             } else {
                ProviderParams pp = handlers.get(0);
                try {
+                  play.Logger.info("Trying to get the only provider");
                   Class provider = getProvider(pp.name());
+                  play.Logger.info("Trying to get the url");
                   String url = (String) Java.invokeStatic(provider, "getLoginUrl", pp);
                   flash.keep();
                   redirect(url);

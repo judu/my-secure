@@ -12,11 +12,11 @@ GET     /choice                 Secure.displayChoice
 # Auth-specific urls
 
 # Basic Auth
-GET     /basic/login            secure.secproviders.BasicSecurityProvider.login
-GET     /basic/logout           secure.secproviders.BasicSecurityProvider.logout
-POST    /basic/login            secure.secproviders.BasicSecurityProvider.authenticate
+GET     /basic/login            providers.BasicSecurityProvider.login
+GET     /basic/logout           providers.BasicSecurityProvider.logout
+POST    /basic/login            providers.BasicSecurityProvider.authenticate
 
 # Google Auth
-GET     /gapp/login             secure.secproviders.GoogleSecurityProvider.login
-GET     /gapp/logout            secure.secproviders.GoogleSecurityProvider.logout 
-GET     /gapp/authd             secure.secproviders.GoogleSecurityProvider.finishAuth
+GET     /gapp/login             providers.GoogleSecurityProvider.login
+GET     /gapp/logout            providers.GoogleSecurityProvider.logout 
+GET     /gapp/authd             providers.GoogleSecurityProvider.finishAuth

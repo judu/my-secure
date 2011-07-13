@@ -22,7 +22,6 @@ import play.Play;
 import play.cache.Cache;
 import play.i18n.Messages;
 import play.modules.secure.SecureConf.ProviderParams;
-import play.mvc.Before;
 import play.mvc.Router;
 import utils.secure.GoogleAuthProcess;
 
