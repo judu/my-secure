@@ -116,7 +116,7 @@ public class BasicSecurityProvider extends Secure {
    }
 
    public static String getLoginUrl(ProviderParams pp) {
-      return Router.getFullUrl("secure.providers.BasicSecurityProvider.login");
+      return Router.getFullUrl("secure.secproviders.BasicSecurityProvider.login");
    }
 
    public static String getDisplayMessage(ProviderParams pp) {
