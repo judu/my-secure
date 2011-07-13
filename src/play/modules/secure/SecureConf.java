@@ -128,8 +128,8 @@ public class SecureConf extends PlayPlugin {
          String bout = getPartOfConf(provDefs);
          
          int len = bout.length();
-         Logger.debug("bout : %s «%s»", len, bout);
-         Logger.debug("provdefs : %s «%s»", provDefs.length(), provDefs);
+//         Logger.debug("bout : %s «%s»", len, bout);
+//         Logger.debug("provdefs : %s «%s»", provDefs.length(), provDefs);
          provDefs = provDefs.substring(len);
          pps.addAll(parsePartOfConf(bout));
       }

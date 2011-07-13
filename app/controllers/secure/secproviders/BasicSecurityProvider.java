@@ -1,4 +1,4 @@
-package controllers.secure.providers;
+package controllers.secure.secproviders;
 
 import annotations.Provides;
 import java.util.logging.Level;
