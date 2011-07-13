@@ -1,4 +1,4 @@
-package controllers.secure.secproviders;
+package controllers.providers;
 
 import annotations.Provides;
 import java.util.logging.Level;
@@ -116,7 +116,7 @@ public class BasicSecurityProvider extends Secure {
    }
 
    public static String getLoginUrl(ProviderParams pp) {
-      return Router.getFullUrl("secure.secproviders.BasicSecurityProvider.login");
+      return Router.getFullUrl("providers.BasicSecurityProvider.login");
    }
 
    public static String getDisplayMessage(ProviderParams pp) {

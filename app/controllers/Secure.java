@@ -1,7 +1,7 @@
 package controllers;
 
 import annotations.Provides;
-import controllers.secure.secproviders.BasicSecurityProvider;
+import controllers.providers.BasicSecurityProvider;
 import extension.secure.SecurityExtensionPoint;
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package controllers.secure.secproviders;
+package controllers.providers;
 
 import annotations.Provides;
 import controllers.Secure;
@@ -53,7 +53,7 @@ public class GoogleSecurityProvider extends Secure {
       manager.setRealm("http://" + request.domain + "/");
       Map map = new HashMap();
       map.put("id", finishID);
-      manager.setReturnTo("http://" + request.domain + Router.reverse("secure.secproviders.GoogleSecurityProvider.finishAuth", map));
+      manager.setReturnTo("http://" + request.domain + Router.reverse("providers.GoogleSecurityProvider.finishAuth", map));
 
 
       Endpoint endpoint = manager.lookupEndpoint(GOOGLEURL + domain);
@@ -154,7 +154,7 @@ public class GoogleSecurityProvider extends Secure {
    public static String getLoginUrl(ProviderParams pp) {
       Map<String, Object> map = new HashMap<String, Object>();
       map.put("domain", pp.get("domain") != null ? pp.get("domain") : Play.configuration.getProperty("auth.googledomain", request.domain));
-      return Router.getFullUrl("secure.secproviders.GoogleSecurityProvider.login", map);
+      return Router.getFullUrl("providers.GoogleSecurityProvider.login", map);
    }
 
    public static String getDisplayMessage(ProviderParams pp) {

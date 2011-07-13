@@ -6,7 +6,7 @@
 package extension.secure;
 
 import annotations.For;
-import controllers.secure.secproviders.BasicSecurityProvider;
+import controllers.providers.BasicSecurityProvider;
 
 /**
  *
